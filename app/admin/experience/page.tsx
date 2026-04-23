@@ -7,14 +7,12 @@ export default async function AdminExperiencePage() {
     });
 
     return (
-        <div className="min-h-screen bg-[#0c0c0f] p-8">
+        <div className="p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <div>
-                        <Link href="/admin" className="text-gray-500 text-sm hover:text-gray-300">
-                            ← Dashboard
-                        </Link>
-                        <h1 className="text-2xl font-semibold text-white mt-1">Experience</h1>
+                        <h1 className="text-2xl font-semibold text-white">Experience</h1>
+                        <p className="text-gray-500 text-sm mt-1">{experiences.length} total</p>
                     </div>
                     <Link
                         href="/admin/experience/new"
@@ -36,22 +34,22 @@ export default async function AdminExperiencePage() {
                         </Link>
                     </div>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="bg-[#111116] border border-white/5 rounded-xl overflow-hidden">
                         {experiences.map((exp) => (
                             <div
                                 key={exp.id}
-                                className="flex items-center justify-between p-4 bg-[#111116] border border-white/10 rounded-xl"
+                                className="flex items-center justify-between px-5 py-3.5 border-b border-white/5 last:border-0"
                             >
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-white font-medium">{exp.role}</span>
+                                        <span className="text-sm text-white">{exp.role}</span>
                                         {exp.current && (
-                                            <span className="text-xs px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full">
+                                            <span className="text-xs px-2 py-0.5 bg-green-500/10 text-green-400 rounded-full">
                                                 Current
                                             </span>
                                         )}
                                     </div>
-                                    <div className="text-sm text-gray-500 mt-0.5">
+                                    <div className="text-xs text-gray-600 mt-0.5">
                                         {exp.company} · {new Date(exp.startDate).getFullYear()} —{' '}
                                         {exp.current
                                             ? 'Present'
@@ -62,7 +60,7 @@ export default async function AdminExperiencePage() {
                                 </div>
                                 <Link
                                     href={`/admin/experience/${exp.id}`}
-                                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                                    className="text-xs text-gray-500 hover:text-white transition-colors"
                                 >
                                     Edit →
                                 </Link>

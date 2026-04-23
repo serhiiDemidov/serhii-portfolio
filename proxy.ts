@@ -4,10 +4,9 @@ import type { NextRequest } from 'next/server';
 
 export async function proxy(request: NextRequest) {
     const session = await auth();
-    const isAdminPage = request.nextUrl.pathname.startsWith('/admin');
     const isLoginPage = request.nextUrl.pathname === '/admin/login';
 
-    if (isAdminPage && !isLoginPage && !session) {
+    if (!isLoginPage && !session) {
         return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
