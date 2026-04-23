@@ -2,7 +2,6 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-// Validation schema for project update
 const UpdateSchema = z.object({
     title: z.string().min(1).optional(),
     description: z.string().min(1).optional(),
@@ -17,10 +16,11 @@ const UpdateSchema = z.object({
 });
 
 // GET — fetch single project
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     try {
         const project = await prisma.project.findUnique({
-            where: { id: params.id },
+            where: { id },
         });
         if (!project) {
             return NextResponse.json({ error: 'Project not found' }, { status: 404 });
@@ -32,12 +32,13 @@ export async function GET(_request: Request, { params }: { params: { id: string 
 }
 
 // PUT — update project
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     try {
         const body = await request.json();
         const data = UpdateSchema.parse(body);
         const project = await prisma.project.update({
-            where: { id: params.id },
+            where: { id },
             data,
         });
         return NextResponse.json(project);
@@ -47,10 +48,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE — remove project
-export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     try {
         await prisma.project.delete({
-            where: { id: params.id },
+            where: { id },
         });
         return NextResponse.json({ success: true });
     } catch {

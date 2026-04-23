@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function NewProjectPage() {
+export default function EditProjectPage() {
     const router = useRouter();
+    const params = useParams();
+    const id = params.id as string;
+
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
     const [tagsInput, setTagsInput] = useState('');
     const [form, setForm] = useState({
         title: '',
@@ -19,6 +23,29 @@ export default function NewProjectPage() {
         order: 0,
     });
 
+    // Fetch existing project data
+    useEffect(() => {
+        async function fetchProject() {
+            const res = await fetch(`/api/projects/${id}`);
+            if (res.ok) {
+                const data = await res.json();
+                setForm({
+                    title: data.title,
+                    description: data.description,
+                    longDesc: data.longDesc ?? '',
+                    liveUrl: data.liveUrl ?? '',
+                    githubUrl: data.githubUrl ?? '',
+                    featured: data.featured,
+                    published: data.published,
+                    order: data.order,
+                });
+                setTagsInput(data.tags.join(', '));
+            }
+            setFetching(false);
+        }
+        fetchProject();
+    }, [id]);
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
@@ -28,8 +55,8 @@ export default function NewProjectPage() {
             .map((t) => t.trim())
             .filter(Boolean);
 
-        const res = await fetch('/api/projects', {
-            method: 'POST',
+        const res = await fetch(`/api/projects/${id}`, {
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...form, tags }),
         });
@@ -38,40 +65,70 @@ export default function NewProjectPage() {
             router.push('/admin/projects');
             router.refresh();
         } else {
-            alert('Ошибка при создании проекта');
+            alert('Failed to update project');
             setLoading(false);
         }
+    }
+
+    async function handleDelete() {
+        if (!confirm('Delete this project? This cannot be undone.')) return;
+
+        const res = await fetch(`/api/projects/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (res.ok) {
+            router.push('/admin/projects');
+            router.refresh();
+        } else {
+            alert('Failed to delete project');
+        }
+    }
+
+    if (fetching) {
+        return (
+            <div className="min-h-screen bg-[#0c0c0f] flex items-center justify-center">
+                <div className="text-gray-500 text-sm">Loading...</div>
+            </div>
+        );
     }
 
     return (
         <div className="min-h-screen bg-[#0c0c0f] p-8">
             <div className="max-w-2xl mx-auto">
-                <div className="mb-8">
-                    <Link
-                        href="/admin/projects"
-                        className="text-gray-500 text-sm hover:text-gray-300"
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <Link
+                            href="/admin/projects"
+                            className="text-gray-500 text-sm hover:text-gray-300"
+                        >
+                            ← Projects
+                        </Link>
+                        <h1 className="text-2xl font-semibold text-white mt-1">Edit Project</h1>
+                    </div>
+                    <button
+                        onClick={handleDelete}
+                        className="px-4 py-2 text-red-400 border border-red-400/20 rounded-lg text-sm hover:bg-red-400/10 transition-colors"
                     >
-                        ← Projects
-                    </Link>
-                    <h1 className="text-2xl font-semibold text-white mt-1">New project</h1>
+                        Delete
+                    </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1">Name *</label>
+                        <label className="block text-sm text-gray-400 mb-1">Title *</label>
                         <input
                             type="text"
                             required
                             value={form.title}
                             onChange={(e) => setForm({ ...form, title: e.target.value })}
                             className="w-full px-4 py-3 bg-[#111116] border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            placeholder="DevFlow — CI/CD Platform"
                         />
                     </div>
 
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">
-                            Short description *
+                            Short Description *
                         </label>
                         <input
                             type="text"
@@ -79,20 +136,16 @@ export default function NewProjectPage() {
                             value={form.description}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             className="w-full px-4 py-3 bg-[#111116] border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
-                            placeholder="Short description for card"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1">
-                            Подробное описание
-                        </label>
+                        <label className="block text-sm text-gray-400 mb-1">Full Description</label>
                         <textarea
                             rows={4}
                             value={form.longDesc}
                             onChange={(e) => setForm({ ...form, longDesc: e.target.value })}
                             className="w-full px-4 py-3 bg-[#111116] border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
-                            placeholder="Detailed description about project..."
                         />
                     </div>
 
@@ -121,7 +174,7 @@ export default function NewProjectPage() {
 
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">
-                            Tags <span className="text-gray-600">(comma-separated)</span>
+                            Tags <span className="text-gray-600">(comma separated)</span>
                         </label>
                         <input
                             type="text"
@@ -133,7 +186,7 @@ export default function NewProjectPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1">Sorting order</label>
+                        <label className="block text-sm text-gray-400 mb-1">Sort Order</label>
                         <input
                             type="number"
                             value={form.order}
@@ -169,7 +222,7 @@ export default function NewProjectPage() {
                             disabled={loading}
                             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
                         >
-                            {loading ? 'Save...' : 'Create project'}
+                            {loading ? 'Saving...' : 'Save Changes'}
                         </button>
                         <Link
                             href="/admin/projects"
