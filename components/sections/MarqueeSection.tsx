@@ -1,18 +1,28 @@
 import type { Skill } from '@prisma/client';
-import * as simpleIcons from 'simple-icons';
 
 interface MarqueeSectionProps {
     skills: Skill[];
 }
 
-// Get icon for skill name
-function getIcon(name: string) {
+type SimpleIcon = { path: string; hex: string };
+
+// Module-level cache — simple-icons is loaded once per server process
+let iconsCache: Record<string, SimpleIcon | undefined> | null = null;
+
+function getIconsCache(): Record<string, SimpleIcon | undefined> {
+    if (!iconsCache) {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        iconsCache = require('simple-icons') as Record<string, SimpleIcon | undefined>;
+    }
+    return iconsCache;
+}
+
+function getIcon(name: string): SimpleIcon | null {
     const key = `si${name
         .replace(/[\s.\-/]/g, '')
         .toLowerCase()
         .replace(/^\w/, (c) => c.toUpperCase())}`;
-    const icon = (simpleIcons as Record<string, { path: string; hex: string } | undefined>)[key];
-    return icon ?? null;
+    return getIconsCache()[key] ?? null;
 }
 
 export default function MarqueeSection({ skills }: MarqueeSectionProps) {

@@ -7,6 +7,7 @@ import ExperienceSection from '@/components/sections/ExperienceSection';
 import ContactSection from '@/components/sections/ContactSection';
 import Navbar from '@/components/sections/Navbar';
 import MarqueeSection from '@/components/sections/MarqueeSection';
+import AnimateIn from '@/components/ui/AnimateIn';
 
 export default async function HomePage() {
     const [session, profile, projects, skills, experiences] = await Promise.all([
@@ -28,11 +29,11 @@ export default async function HomePage() {
         <main className="bg-[#0c0c0f] min-h-screen">
             <Navbar profile={profile} isAdmin={!!session} />
             <HeroSection profile={profile} />
-            <MarqueeSection skills={skills} />
-            <ProjectsSection projects={projects} />
-            <SkillsSection skills={skills} />
-            <ExperienceSection experiences={experiences} />
-            <ContactSection profile={profile} />
+            <AnimateIn><MarqueeSection skills={skills} /></AnimateIn>
+            <AnimateIn><ProjectsSection projects={projects} /></AnimateIn>
+            <AnimateIn><SkillsSection skills={skills} /></AnimateIn>
+            <AnimateIn><ExperienceSection experiences={experiences} /></AnimateIn>
+            <AnimateIn><ContactSection profile={profile} /></AnimateIn>
         </main>
     );
 }
