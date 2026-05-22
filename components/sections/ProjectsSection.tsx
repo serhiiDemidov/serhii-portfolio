@@ -24,10 +24,19 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                         {projects.map((project, index) => (
                             <div
                                 key={project.id}
-                                className={`group bg-[#111116] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all duration-300 ${
+                                className={`relative group bg-[#111116] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all duration-300 ${
                                     index === 0 ? 'md:col-span-2' : ''
-                                }`}
+                                } ${project.liveUrl ? 'cursor-pointer' : ''}`}
                             >
+                                {project.liveUrl && (
+                                    <a
+                                        href={project.liveUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="absolute inset-0 z-0"
+                                        aria-label={`Open ${project.title}`}
+                                    />
+                                )}
                                 {/* Image */}
                                 {project.imageUrl ? (
                                     <div
@@ -71,7 +80,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                                     </div>
 
                                     {/* Links */}
-                                    <div className="flex items-center gap-4">
+                                    <div className="relative z-10 flex items-center gap-4">
                                         {project.liveUrl && (
                                             <a
                                                 href={project.liveUrl}
