@@ -19,7 +19,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         <div className="space-y-3">
             {/* Preview */}
             {value && (
-                <div className="relative w-full h-48 rounded-lg overflow-hidden border border-white/10">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-white/10">
                     <Image src={value} alt="Project image" fill className="object-cover" />
                     <button
                         type="button"

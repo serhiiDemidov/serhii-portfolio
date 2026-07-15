@@ -39,9 +39,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                                 )}
                                 {/* Image */}
                                 {project.imageUrl ? (
-                                    <div
-                                        className={`relative overflow-hidden ${index === 0 ? 'h-64' : 'h-48'}`}
-                                    >
+                                    <div className="relative aspect-video overflow-hidden">
                                         <Image
                                             src={project.imageUrl}
                                             alt={project.title}
@@ -51,9 +49,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                                         <div className="absolute inset-0 bg-linear-to-t from-[#111116] to-transparent" />
                                     </div>
                                 ) : (
-                                    <div
-                                        className={`bg-linear-to-br from-blue-600/10 to-purple-600/10 flex items-center justify-center ${index === 0 ? 'h-64' : 'h-48'}`}
-                                    >
+                                    <div className="aspect-video bg-linear-to-br from-blue-600/10 to-purple-600/10 flex items-center justify-center">
                                         <span className="text-4xl opacity-20">🚀</span>
                                     </div>
                                 )}
