@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
 const UpdateSchema = z.object({
@@ -40,6 +41,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
             where: { id },
             data,
         });
+        revalidateTag('skills', { expire: 0 });
         return NextResponse.json(skill);
     } catch {
         return NextResponse.json({ error: 'Failed to update skill' }, { status: 500 });
@@ -54,6 +56,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     const { id } = await params;
     try {
         await prisma.skill.delete({ where: { id } });
+        revalidateTag('skills', { expire: 0 });
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Failed to delete skill' }, { status: 500 });

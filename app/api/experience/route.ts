@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
 const ExperienceSchema = z.object({
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
                 endDate: data.endDate ? new Date(data.endDate) : null,
             },
         });
+        revalidateTag('experiences', { expire: 0 });
         return NextResponse.json(experience, { status: 201 });
     } catch {
         return NextResponse.json({ error: 'Failed to create experience' }, { status: 500 });

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
 // Validation schema for project creation
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const data = ProjectSchema.parse(body);
         const project = await prisma.project.create({ data });
+        revalidateTag('projects', { expire: 0 });
         return NextResponse.json(project, { status: 201 });
     } catch {
         return NextResponse.json({ error: 'Failed to create project' }, { status: 500 });

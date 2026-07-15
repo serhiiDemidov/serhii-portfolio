@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 
 // GET — fetch single experience
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -35,6 +36,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
                 endDate: body.endDate ? new Date(body.endDate) : null,
             },
         });
+        revalidateTag('experiences', { expire: 0 });
         return NextResponse.json(experience);
     } catch {
         return NextResponse.json({ error: 'Failed to update experience' }, { status: 500 });
@@ -49,6 +51,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     const { id } = await params;
     try {
         await prisma.experience.delete({ where: { id } });
+        revalidateTag('experiences', { expire: 0 });
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Failed to delete experience' }, { status: 500 });

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
 const UpdateSchema = z.object({
@@ -48,6 +49,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
             where: { id },
             data,
         });
+        revalidateTag('projects', { expire: 0 });
         return NextResponse.json(project);
     } catch {
         return NextResponse.json({ error: 'Failed to update project' }, { status: 500 });
@@ -64,6 +66,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
         await prisma.project.delete({
             where: { id },
         });
+        revalidateTag('projects', { expire: 0 });
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 });

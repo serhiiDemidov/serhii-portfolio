@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { getProfile, getPublishedProjects, getSkills, getExperiences } from '@/lib/data';
 import HeroSection from '@/components/sections/HeroSection';
 import ProjectsSection from '@/components/sections/ProjectsSection';
 import SkillsSection from '@/components/sections/SkillsSection';
@@ -12,17 +12,10 @@ import AnimateIn from '@/components/ui/AnimateIn';
 export default async function HomePage() {
     const [session, profile, projects, skills, experiences] = await Promise.all([
         auth(),
-        prisma.profile.findFirst(),
-        prisma.project.findMany({
-            where: { published: true },
-            orderBy: { order: 'asc' },
-        }),
-        prisma.skill.findMany({
-            orderBy: { order: 'asc' },
-        }),
-        prisma.experience.findMany({
-            orderBy: { order: 'asc' },
-        }),
+        getProfile(),
+        getPublishedProjects(),
+        getSkills(),
+        getExperiences(),
     ]);
 
     return (

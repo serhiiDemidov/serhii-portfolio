@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 
 // GET — fetch profile
 export async function GET() {
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
               })
             : await prisma.profile.create({ data: body });
 
+        revalidateTag('profile', { expire: 0 });
         return NextResponse.json(profile);
     } catch {
         return NextResponse.json({ error: 'Failed to save profile' }, { status: 500 });

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { getPublishedProject } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +9,7 @@ interface ProjectPageProps {
 }
 
 async function getProject(id: string) {
-    const project = await prisma.project.findUnique({ where: { id } });
+    const project = await getPublishedProject(id);
     if (!project || !project.published) return null;
     return project;
 }

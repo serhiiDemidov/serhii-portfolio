@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
 const SkillSchema = z.object({
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
         const body = await request.json();
         const data = SkillSchema.parse(body);
         const skill = await prisma.skill.create({ data });
+        revalidateTag('skills', { expire: 0 });
         return NextResponse.json(skill, { status: 201 });
     } catch {
         return NextResponse.json({ error: 'Failed to create skill' }, { status: 500 });
