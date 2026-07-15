@@ -32,7 +32,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 </div>
 
                 {/* Greeting */}
-                <p className="font-mono text-blue-400 text-sm mb-3">// Hello, world 👋</p>
+                <p className="font-mono text-blue-400 text-sm mb-3">{'// Hello, world 👋'}</p>
 
                 {/* Name */}
                 <h1 className="text-6xl md:text-8xl font-semibold text-white leading-none tracking-tight mb-4">

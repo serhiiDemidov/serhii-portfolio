@@ -13,7 +13,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                         Contact
                     </p>
                     <h2 className="text-4xl font-semibold text-white tracking-tight mb-4">
-                        Let's build
+                        Let&apos;s build
                         <br />
                         <span className="text-blue-500">something</span> together
                     </h2>

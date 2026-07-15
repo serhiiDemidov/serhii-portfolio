@@ -22,7 +22,7 @@ export default async function AdminDashboardPage() {
                 <div className="mb-8">
                     <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
                     <p className="text-gray-500 text-sm mt-1">
-                        Welcome back — here's what's going on
+                        Welcome back — here&apos;s what&apos;s going on
                     </p>
                 </div>
 
