@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ui/ImageUpload';
+import GalleryUpload from '@/components/ui/GalleryUpload';
 
 export default function NewProjectPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [tagsInput, setTagsInput] = useState('');
+    const [images, setImages] = useState<string[]>([]);
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -33,7 +35,7 @@ export default function NewProjectPage() {
         const res = await fetch('/api/projects', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...form, tags }),
+            body: JSON.stringify({ ...form, tags, images }),
         });
 
         if (res.ok) {
@@ -60,6 +62,13 @@ export default function NewProjectPage() {
                         value={form.imageUrl}
                         onChange={(url: string) => setForm({ ...form, imageUrl: url })}
                     />
+                </div>
+
+                <div>
+                    <label className="block text-sm text-gray-400 mb-1">
+                        Gallery <span className="text-gray-600">(shown on the project page)</span>
+                    </label>
+                    <GalleryUpload value={images} onChange={setImages} />
                 </div>
 
                 <div>

@@ -2,6 +2,7 @@ import { getPublishedProject } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import ProjectGallery from '@/components/ui/ProjectGallery';
 import type { Metadata } from 'next';
 
 interface ProjectPageProps {
@@ -100,6 +101,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         )}
                     </div>
                 )}
+
+                <ProjectGallery images={project.images} title={project.title} />
 
                 {project.longDesc && (
                     <div className="border-t border-white/5 pt-8 text-gray-400 leading-relaxed whitespace-pre-wrap">

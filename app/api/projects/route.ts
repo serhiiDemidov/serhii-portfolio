@@ -10,6 +10,7 @@ const ProjectSchema = z.object({
     description: z.string().min(1),
     longDesc: z.string().optional(),
     imageUrl: z.string().optional(),
+    images: z.array(z.string()).default([]),
     liveUrl: z.string().optional(),
     githubUrl: z.string().optional(),
     tags: z.array(z.string()).default([]),
