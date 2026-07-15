@@ -1,5 +1,6 @@
 import type { Project } from '@prisma/client';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface ProjectsSectionProps {
     projects: Project[];
@@ -24,19 +25,15 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                         {projects.map((project, index) => (
                             <div
                                 key={project.id}
-                                className={`relative group bg-[#111116] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all duration-300 ${
+                                className={`relative group bg-[#111116] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all duration-300 cursor-pointer ${
                                     index === 0 ? 'md:col-span-2' : ''
-                                } ${project.liveUrl ? 'cursor-pointer' : ''}`}
+                                }`}
                             >
-                                {project.liveUrl && (
-                                    <a
-                                        href={project.liveUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="absolute inset-0 z-0"
-                                        aria-label={`Open ${project.title}`}
-                                    />
-                                )}
+                                <Link
+                                    href={`/projects/${project.id}`}
+                                    className="absolute inset-0 z-1"
+                                    aria-label={`View ${project.title}`}
+                                />
                                 {/* Image */}
                                 {project.imageUrl ? (
                                     <div className="relative aspect-video overflow-hidden">
