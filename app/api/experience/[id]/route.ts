@@ -1,8 +1,12 @@
 import { prisma } from '@/lib/prisma';
+import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
 
 // GET — fetch single experience
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     const { id } = await params;
     try {
         const experience = await prisma.experience.findUnique({ where: { id } });
@@ -17,6 +21,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
 // PUT — update experience
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     const { id } = await params;
     try {
         const body = await request.json();
@@ -36,6 +43,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
 // DELETE — remove experience
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     const { id } = await params;
     try {
         await prisma.experience.delete({ where: { id } });

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -14,6 +15,9 @@ const ExperienceSchema = z.object({
 
 // GET — fetch all experience
 export async function GET() {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     try {
         const experiences = await prisma.experience.findMany({
             orderBy: { order: 'asc' },
@@ -26,6 +30,9 @@ export async function GET() {
 
 // POST — create experience
 export async function POST(request: Request) {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     try {
         const body = await request.json();
         const data = ExperienceSchema.parse(body);

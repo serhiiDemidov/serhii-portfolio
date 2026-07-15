@@ -1,8 +1,12 @@
 import { prisma } from '@/lib/prisma';
+import { requireSession } from '@/lib/api-auth';
 import { NextResponse } from 'next/server';
 
 // GET — fetch profile
 export async function GET() {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     try {
         const profile = await prisma.profile.findFirst();
         return NextResponse.json(profile);
@@ -13,6 +17,9 @@ export async function GET() {
 
 // POST — create or update profile (upsert)
 export async function POST(request: Request) {
+    const unauthorized = await requireSession();
+    if (unauthorized) return unauthorized;
+
     try {
         const body = await request.json();
         const existing = await prisma.profile.findFirst();
