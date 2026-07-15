@@ -6,7 +6,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
     // Login page — no sidebar
     if (!session) {
-        return <>{children}</>;
+        return (
+            <div className="min-h-screen bg-[#0c0c0f] flex items-center justify-center">
+                {children}
+            </div>
+        );
     }
 
     return (
