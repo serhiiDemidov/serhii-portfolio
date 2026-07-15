@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const CATEGORIES = ['Frontend', 'Backend', 'DevOps', 'Tools', 'Other'];
+const CATEGORIES = ['Frontend', 'Backend', 'DevOps', 'WordPress Ecosystem', 'Tools', 'Other'];
 
 export default function NewSkillPage() {
     const router = useRouter();
