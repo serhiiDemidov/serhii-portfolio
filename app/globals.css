@@ -9,6 +9,11 @@ html {
     scroll-behavior: smooth;
 }
 
+body.custom-cursor-active,
+body.custom-cursor-active * {
+    cursor: none !important;
+}
+
 [data-animate] {
     opacity: 0;
     transform: translateY(28px);

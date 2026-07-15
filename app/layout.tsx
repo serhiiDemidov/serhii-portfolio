@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { getProfile } from '@/lib/data';
+import CustomCursor from '@/components/ui/CustomCursor';
 
 export async function generateMetadata(): Promise<Metadata> {
     const profile = await getProfile();
@@ -15,7 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body className="bg-[#0c0c0f]">{children}</body>
+            <body className="bg-[#0c0c0f]">
+                <CustomCursor />
+                {children}
+            </body>
         </html>
     );
 }
