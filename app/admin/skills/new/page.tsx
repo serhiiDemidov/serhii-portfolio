@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
-const CATEGORIES = ['Frontend', 'Backend', 'DevOps', 'WordPress Ecosystem', 'Tools', 'Other'];
+import { SKILL_CATEGORIES } from '@/lib/constants';
 
 export default function NewSkillPage() {
     const router = useRouter();
@@ -68,7 +67,7 @@ export default function NewSkillPage() {
                             onChange={(e) => setForm({ ...form, category: e.target.value })}
                             className="w-full px-4 py-3 bg-[#111116] border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
                         >
-                            {CATEGORIES.map((c) => (
+                            {SKILL_CATEGORIES.map((c) => (
                                 <option key={c} value={c}>
                                     {c}
                                 </option>
